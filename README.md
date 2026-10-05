@@ -38,3 +38,4 @@ curl localhost:5000/health
 See `docs/LEGACY_NOTES.md` for the intentionally outdated items and the
 version that fixes each. Verify current advisories with your scanner; the
 database changes over time.
+Pipeline test for DevSecOps workflow.
