@@ -1,0 +1,38 @@
+name: DevSecOps Pipeline
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  security:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install API dependencies
+        working-directory: ./api
+        run: npm install
+
+      - name: Run SCA security audit
+        working-directory: ./api
+        run: npm audit --audit-level=high
+
+      - name: Build and start containers
+        run: docker compose up -d --build
+
+      - name: Wait for application
+        run: sleep 15
+
+      - name: OWASP ZAP Baseline Scan
+        uses: zaproxy/action-baseline@v0.12.0
+        with:
+          target: 'http://localhost:3000'
